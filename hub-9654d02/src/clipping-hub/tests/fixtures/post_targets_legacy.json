@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "poster": "opus",
+  "note": "Legacy target bindings only. No accounts map and no campaign_rules. Do not treat this as ready to publish.",
+  "type_routes": {
+    "horror": "MAIN",
+    "campaign": "PAID",
+    "gta": "GAMING"
+  },
+  "targets": {
+    "MAIN": {
+      "name": "Clipped Motions",
+      "handle": "@clippedmotions",
+      "yt": "UCgMuVjQmB9WvZtSz4e23THw",
+      "opus_post_account_id": "6aedeb42386c37c006241619",
+      "whop": ""
+    },
+    "PAID": {
+      "name": "Clipped Motions Clips",
+      "handle": "@clippedmotionsclips",
+      "yt": "UC8TrAT8V-HacqYlqqqzIQKg",
+      "opus_post_account_id": "6aedf5ffb09f11b7595325ed",
+      "whop": ""
+    },
+    "GAMING": {
+      "name": "Clipped Motions Gaming",
+      "handle": "",
+      "yt": "UC7fAgyeOwAKZYFAbcyc2Zig",
+      "opus_post_account_id": "6aee516c386c37c006246b12",
+      "whop": ""
+    }
+  }
+}

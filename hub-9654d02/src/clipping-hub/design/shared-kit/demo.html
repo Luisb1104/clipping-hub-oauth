@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>motion kit demo</title>
+<script>var KIT=!/kit=0/.test(location.search);var P=KIT?"motion":"bench/blank";document.write('<link rel="stylesheet" href="'+P+'.css">');</script>
+<style>body{font:15px system-ui;background:#0e1116;color:#e6e9ef;margin:0;padding:24px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:#171c24;border-radius:12px;padding:16px;height:90px}
+.big{font-size:32px;font-weight:600;margin:20px 0}svg{width:100%;height:80px;background:#171c24;border-radius:12px;margin:12px 0}.bar{height:14px;width:60%;background:#5ef2a6;border-radius:7px;transform-origin:left}
+button{background:#232b38;color:inherit;border:0;border-radius:8px;padding:10px 16px}</style></head><body>
+<h3>Cards (stagger)</h3><div class="grid">
+<div class="card m-i m-hover" style="--i:0">A</div><div class="card m-i m-hover" style="--i:1">B</div><div class="card m-i m-hover" style="--i:2">C</div><div class="card m-i m-hover" style="--i:3">D</div>
+<div class="card m-i m-hover" style="--i:4">E</div><div class="card m-i m-hover" style="--i:5">F</div><div class="card m-i m-hover" style="--i:9">G (capped)</div><div class="card m-i m-hover" style="--i:7">H</div></div>
+<div class="big m-glow m-num" id="n"><span data-count="12345.67">$12,345.67</span></div>
+<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path class="m-draw" pathLength="1" d="M0 50 L30 35 L60 42 L90 20 L120 28 L150 10 L200 18" fill="none" stroke="#5ef2a6" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+<div class="bar m-up"></div><p><button class="m-press">Press</button></p><section class="m-tab" id="pane">Tab pane</section>
+<script>document.write("<script src="+P+".js><\/script>")</script></body></html>

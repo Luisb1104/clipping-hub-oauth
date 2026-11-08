@@ -1,0 +1,69 @@
+/* Sky Air design tokens — DRAFT for dev. Values are exactly what the mockups (sky.css) use. */
+:root{
+  /* fonts */
+  --font-sans:Inter,"Helvetica Neue",Arial,system-ui,sans-serif;
+  --fs-eyebrow:11px;--fs-nav-label:11px;--fs-micro:11px;--fs-banner:11px;--fs-chip:11px;--fs-small:13px;--fs-body:14px;--fs-button:15px;--fs-h3:20px;--fs-h2:26px;--fs-h1:34px;
+  --fw-regular:500;--fw-bold:700;--fw-heavy:800;--fw-black:900;
+  --ls-eyebrow:.14em;
+  /* spacing scale */
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;
+  /* radii */
+  --r-card:26px;--r-inner:18px;--r-thumb:22px;--r-pill:999px;--r-phone:44px;--r-mac:22px;
+  /* sizes */
+  --tap:44px;--btn-h:50px;--panel-blur:20px;
+  --nav-h:64px;--nav-item-h:52px;--toggle-seg-w:44px;--toggle-seg-h:44px;--toggle-pad:3px;
+  /* motion: transform/opacity only; 150ms ease-out; none when prefers-reduced-motion */
+  --motion-fast:150ms;--motion-ease:cubic-bezier(.2,.8,.2,1);
+  /* one-screen layout tokens (added for the one-screen mockups) */
+  --frame-w-phone:390px;--frame-h-phone:844px;--frame-w-mac:1440px;--frame-h-mac:900px;
+  --card-row-card-w:148px;--card-row-card-h:196px;--card-row-gap:12px;--card-row-peek:48px;
+  --dot-size:7px;--dot-active-w:22px;--dot-gap:6px;
+  --strip-chip-h:44px;--strip-gap:8px;
+  /* pooled revenue card (added) */
+  --pool-total-fs:38px;--pool-total-fs-mac:40px;--pool-total-fw:900;--pool-line-fs:12.5px;--pool-row-h:56px;--ribbon-fs:11px;--ribbon-h:30px;
+}
+[data-theme=light]{
+  color-scheme:light;
+  --page-bg:#dbe3f4;
+  --bg-grad:radial-gradient(460px 320px at 100% 0%,rgba(167,139,250,.5),transparent),radial-gradient(460px 340px at 0% 55%,rgba(125,190,255,.5),transparent),radial-gradient(420px 300px at 90% 100%,rgba(255,190,225,.5),transparent),linear-gradient(180deg,#e6f0ff,#efe8ff);
+  --frame-border:rgba(255,255,255,.9);--frame-shadow:0 20px 50px rgba(80,90,160,.25);
+  --panel-fill:rgba(255,255,255,.55);--panel-border:rgba(255,255,255,.9);--panel-shadow:0 10px 30px rgba(80,90,160,.14);
+  --inner-fill:rgba(255,255,255,.55);
+  --text-1:#1b2140;--text-2:#3b4470;--text-3:#454e7a;
+  --accent-1:#4553e0;--accent-2:#6a45dc;--accent-grad:linear-gradient(135deg,#4553e0,#6a45dc);--accent-text:#ffffff;--accent-shadow:0 10px 24px rgba(79,92,224,.35);--accent-ink:#4338ca;
+  --ok-text:#086245;--ok-line:rgba(8,98,69,.45);--ok-fill:rgba(12,138,98,.10);
+  --warn-text:#7a4a00;--warn-line:rgba(138,82,0,.45);--warn-fill:rgba(251,191,36,.22);
+  --bad-text:#b3203d;--bad-line:rgba(179,32,61,.45);--bad-fill:rgba(251,113,133,.14);
+  --neutral-text:#3b4470;--neutral-line:rgba(59,68,112,.55);--neutral-fill:transparent;
+  --disabled-fill:rgba(27,33,64,.06);--disabled-text:#454e7a;--disabled-line:rgba(27,33,64,.28);
+  --nav-fill:rgba(255,255,255,.7);--nav-border:rgba(255,255,255,.9);--nav-shadow:0 12px 34px rgba(80,90,160,.25);--nav-active-bg:#1b2140;--nav-active-text:#ffffff;
+  --toggle-fill:rgba(255,255,255,.7);--toggle-border:rgba(255,255,255,.9);--toggle-on-bg:#1b2140;--toggle-on-fg:#ffffff;--toggle-off-fg:#3b4470;
+  --hatch-line:rgba(27,33,64,.10);--dash-line:rgba(27,33,64,.30);
+  --thumb-1:linear-gradient(160deg,#8fd0ff,#8b9bff);--thumb-2:linear-gradient(160deg,#c3a6ff,#ff9fd0);--thumb-3:linear-gradient(160deg,#9be3ff,#b9a4ff);
+  --thumb-label-bg:rgba(10,14,40,.88);--thumb-label-text:#ffffff;
+  --cap-fill:rgba(255,255,255,.7);--cap-border:rgba(255,255,255,.95);--cap-text:#1b2140;--cap-key:#4338ca;
+  --banner-amber:#fbbf24;--banner-bg:#15111d;
+}
+[data-theme=dark]{
+  color-scheme:dark;
+  --page-bg:#060919;
+  --bg-grad:radial-gradient(460px 340px at 100% 0%,rgba(124,92,255,.42),transparent),radial-gradient(460px 360px at 0% 55%,rgba(52,96,214,.34),transparent),radial-gradient(420px 300px at 90% 100%,rgba(176,84,200,.26),transparent),linear-gradient(180deg,#0b1030,#150f3d);
+  --frame-border:rgba(255,255,255,.14);--frame-shadow:0 20px 50px rgba(0,0,0,.5);
+  --panel-fill:rgba(255,255,255,.08);--panel-border:rgba(255,255,255,.16);--panel-shadow:0 10px 30px rgba(0,0,0,.35);
+  --inner-fill:rgba(255,255,255,.06);
+  --text-1:#f1f3ff;--text-2:#d0d5f4;--text-3:#bcc3e8;
+  --accent-1:#5a63f0;--accent-2:#7a55e8;--accent-grad:linear-gradient(135deg,#5a63f0,#7a55e8);--accent-text:#ffffff;--accent-shadow:0 10px 24px rgba(90,99,240,.35);--accent-ink:#c7c9ff;
+  --ok-text:#6ee7b7;--ok-line:rgba(110,231,183,.5);--ok-fill:rgba(110,231,183,.12);
+  --warn-text:#fcd34d;--warn-line:rgba(252,211,77,.5);--warn-fill:rgba(252,211,77,.12);
+  --bad-text:#ffbfc7;--bad-line:rgba(255,191,199,.5);--bad-fill:rgba(251,113,133,.14);
+  --neutral-text:#d0d5f4;--neutral-line:rgba(208,213,244,.5);--neutral-fill:transparent;
+  --disabled-fill:rgba(255,255,255,.05);--disabled-text:#bcc3e8;--disabled-line:rgba(255,255,255,.22);
+  --nav-fill:rgba(20,24,66,.62);--nav-border:rgba(255,255,255,.16);--nav-shadow:0 12px 34px rgba(0,0,0,.45);--nav-active-bg:linear-gradient(135deg,#5a63f0,#7a55e8);--nav-active-text:#ffffff;
+  --toggle-fill:rgba(20,24,66,.62);--toggle-border:rgba(255,255,255,.16);--toggle-on-bg:linear-gradient(135deg,#5a63f0,#7a55e8);--toggle-on-fg:#ffffff;--toggle-off-fg:#d0d5f4;
+  --hatch-line:rgba(255,255,255,.12);--dash-line:rgba(255,255,255,.28);
+  --thumb-1:linear-gradient(160deg,#4a78e8,#6a4cd8);--thumb-2:linear-gradient(160deg,#8a54e0,#c0508a);--thumb-3:linear-gradient(160deg,#3a8ad6,#6558d8);
+  --thumb-label-bg:rgba(5,8,28,.88);--thumb-label-text:#ffffff;
+  --cap-fill:rgba(255,255,255,.07);--cap-border:rgba(255,255,255,.16);--cap-text:#e4e7ff;--cap-key:#b9bcff;
+  --banner-amber:#fbbf24;--banner-bg:#15111d;
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

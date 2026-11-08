@@ -1,0 +1,40 @@
+{
+  "note": "Corrected UUID campaign rules for offline matching tests. Not written to live targets. Empty deny lists from the withdrawn draft are not used. A missing rule stays campaign_config_absent. These platform denies are the updated brief's evidence and still wait on a separate guideline confirmation before anyone treats them as a live config.",
+  "campaign_rules": {
+    "73ceebf3-10ea-4633-a490-0ed85502d96a": {
+      "hold": false,
+      "deny_platforms": ["FB Page"],
+      "reason": "campaign_tt_ig_yt_only"
+    },
+    "a3d80470-4a91-4ddf-8504-6cafe18f10c8": {
+      "hold": false,
+      "deny_platforms": ["FB Page"],
+      "reason": "campaign_tt_ig_yt_only"
+    },
+    "fba5eb2b-624a-41d6-a6c7-4519e2877e2c": {
+      "hold": false,
+      "deny_platforms": ["FB Page"],
+      "reason": "campaign_tt_ig_yt_only"
+    },
+    "6bdc8e4b-3ebf-44f1-aedb-067589ca9c89": {
+      "hold": false,
+      "deny_platforms": ["TikTok Business", "FB Page"],
+      "reason": "campaign_yt_ig_only"
+    },
+    "78b4e379-2aa0-4d20-9fd0-ed02a816e3b1": {
+      "hold": false,
+      "deny_platforms": ["Clipped Motions YouTube", "FB Page"],
+      "reason": "campaign_tt_ig_only"
+    },
+    "8b79c473-d295-4901-8aee-e43c7ad03663": {
+      "hold": false,
+      "deny_platforms": ["FB Page"],
+      "reason": "campaign_tt_ig_yt_only"
+    },
+    "50786486-a49d-4a17-b81b-0c416cb635da": {
+      "hold": true,
+      "deny_platforms": ["FB Page"],
+      "reason": "alliance_submission_window"
+    }
+  }
+}

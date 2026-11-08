@@ -1,0 +1,242 @@
+[
+ {
+  "html": "sky1-light-phone-overview.html",
+  "png": "clip-sky1-light-phone-overview.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-overview",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-queue.html",
+  "png": "clip-sky1-light-phone-queue.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-queue",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-earnings.html",
+  "png": "clip-sky1-light-phone-earnings.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-earnings",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-flags.html",
+  "png": "clip-sky1-light-phone-flags.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-flags",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-costs.html",
+  "png": "clip-sky1-light-phone-costs.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-costs",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-connect.html",
+  "png": "clip-sky1-light-phone-connect.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-connect",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-queue-empty.html",
+  "png": "clip-sky1-light-phone-queue-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-queue-empty",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-flags-empty.html",
+  "png": "clip-sky1-light-phone-flags-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-flags-empty",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-phone-earnings-empty.html",
+  "png": "clip-sky1-light-phone-earnings-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-earnings-empty",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-mac-overview.html",
+  "png": "clip-sky1-light-mac-overview.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-overview",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-light-mac-more.html",
+  "png": "clip-sky1-light-mac-more.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-more",
+  "theme": "light"
+ },
+ {
+  "html": "sky1-dark-phone-overview.html",
+  "png": "clip-sky1-dark-phone-overview.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-overview",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-queue.html",
+  "png": "clip-sky1-dark-phone-queue.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-queue",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-earnings.html",
+  "png": "clip-sky1-dark-phone-earnings.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-earnings",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-flags.html",
+  "png": "clip-sky1-dark-phone-flags.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-flags",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-costs.html",
+  "png": "clip-sky1-dark-phone-costs.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-costs",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-connect.html",
+  "png": "clip-sky1-dark-phone-connect.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-connect",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-queue-empty.html",
+  "png": "clip-sky1-dark-phone-queue-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-queue-empty",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-flags-empty.html",
+  "png": "clip-sky1-dark-phone-flags-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-flags-empty",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-phone-earnings-empty.html",
+  "png": "clip-sky1-dark-phone-earnings-empty.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-earnings-empty",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-mac-overview.html",
+  "png": "clip-sky1-dark-mac-overview.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-overview",
+  "theme": "dark"
+ },
+ {
+  "html": "sky1-dark-mac-more.html",
+  "png": "clip-sky1-dark-mac-more.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-more",
+  "theme": "dark"
+ },
+ {
+  "html": "sky2-light-phone-overview-pooled.html",
+  "png": "clip-sky2-light-phone-overview-pooled.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-overview-pooled",
+  "theme": "light"
+ },
+ {
+  "html": "sky2-light-phone-pooled-split.html",
+  "png": "clip-sky2-light-phone-pooled-split.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-pooled-split",
+  "theme": "light"
+ },
+ {
+  "html": "sky2-light-phone-pooled-example.html",
+  "png": "clip-sky2-light-phone-pooled-example.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-pooled-example",
+  "theme": "light"
+ },
+ {
+  "html": "sky2-light-mac-overview-pooled.html",
+  "png": "clip-sky2-light-mac-overview-pooled.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-overview-pooled",
+  "theme": "light"
+ },
+ {
+  "html": "sky2-dark-phone-overview-pooled.html",
+  "png": "clip-sky2-dark-phone-overview-pooled.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-overview-pooled",
+  "theme": "dark"
+ },
+ {
+  "html": "sky2-dark-phone-pooled-split.html",
+  "png": "clip-sky2-dark-phone-pooled-split.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-pooled-split",
+  "theme": "dark"
+ },
+ {
+  "html": "sky2-dark-phone-pooled-example.html",
+  "png": "clip-sky2-dark-phone-pooled-example.png",
+  "w": 430,
+  "dpr": 2,
+  "name": "phone-pooled-example",
+  "theme": "dark"
+ },
+ {
+  "html": "sky2-dark-mac-overview-pooled.html",
+  "png": "clip-sky2-dark-mac-overview-pooled.png",
+  "w": 1476,
+  "dpr": 1.5,
+  "name": "mac-overview-pooled",
+  "theme": "dark"
+ }
+]

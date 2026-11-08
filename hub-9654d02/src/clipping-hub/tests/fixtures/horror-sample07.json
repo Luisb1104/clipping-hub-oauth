@@ -1,0 +1,12 @@
+{
+  "id": "sample07",
+  "clip_type": "horror",
+  "title": "Hallway sample 07",
+  "caption": "Synthetic horror sample. Local final only.",
+  "video": "/samples/sample07.mp4",
+  "platforms": ["Clipped Motions YouTube", "TikTok Business", "IG Business", "FB Page"],
+  "ai_disclosure": true,
+  "is_ad": false,
+  "status": "pending",
+  "note": "Local final has no Opus projectId or clipId. Approval must not promise an upload."
+}

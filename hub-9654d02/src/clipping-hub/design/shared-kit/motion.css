@@ -1,0 +1,21 @@
+/* motion.css v2: shared motion kit. transform/opacity only (except .m-draw: paint-only SVG stroke), one-shot, no loops, all <=450ms. See README.md.
+   .m-up fade-up | .m-spring tab/pane spring | .m-tab 180ms pane swap | .m-i stagger (--i 0..7) | .m-stagger parent stagger
+   .m-draw SVG path[pathLength=1] | .m-hover hover+press scale | .m-press press only | .m-glow one-shot pulse (add once) | .m-num tabular digits */
+:root{--m-ease:cubic-bezier(.2,.8,.2,1);--m-spring:cubic-bezier(.34,1.56,.64,1);--m-glow:rgba(94,242,166,.38)}
+@keyframes m-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes m-tab{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes m-glow{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+@keyframes m-draw{from{stroke-dasharray:1;stroke-dashoffset:1}to{stroke-dasharray:1;stroke-dashoffset:0}}
+.m-up{animation:m-up .4s var(--m-ease) both}
+.m-spring{animation:m-up .42s var(--m-spring) both}
+.m-tab{animation:m-tab .18s var(--m-ease) both}
+.m-i{animation:m-up .4s var(--m-ease) both;animation-delay:calc(min(var(--i,0),7)*40ms)}
+.m-stagger>:nth-child(2){animation-delay:.04s}.m-stagger>:nth-child(3){animation-delay:.08s}.m-stagger>:nth-child(4){animation-delay:.12s}.m-stagger>:nth-child(5){animation-delay:.16s}.m-stagger>:nth-child(6){animation-delay:.2s}.m-stagger>:nth-child(7){animation-delay:.24s}.m-stagger>:nth-child(n+8){animation-delay:.28s}
+.m-num{font-variant-numeric:tabular-nums}
+.m-draw[pathLength="1"]{animation:m-draw .45s ease-out backwards}
+.m-press,.m-hover{transition:transform .15s var(--m-ease)}
+.m-press:active,.m-hover:active{transform:scale(.98)}
+@media (hover:hover){.m-hover:hover{transform:scale(1.02)}.m-hover:hover:active{transform:scale(.98)}}
+.m-glow{position:relative}
+.m-glow::after{content:"";position:absolute;inset:-4px -10px;border-radius:14px;pointer-events:none;opacity:0;background:radial-gradient(closest-side,var(--m-glow),transparent);animation:m-glow .45s ease-out 1}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

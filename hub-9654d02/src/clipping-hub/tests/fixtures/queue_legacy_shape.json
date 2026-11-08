@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "note": "Shape of a live queue: horror sample, twelve campaign clips without rights or terms, and a change_requested Alliance item. Not a fully ready publish set.",
+  "items": [
+    {
+      "id": "sample07",
+      "clip_type": "horror",
+      "title": "Hallway sample 07",
+      "caption": "Synthetic horror sample. Local final only.",
+      "video": "/samples/sample07.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": false,
+      "status": "pending",
+      "destination": {
+        "target": "MAIN",
+        "name": "Clipped Motions",
+        "handle": "@clippedmotions",
+        "yt": "UCgMuVjQmB9WvZtSz4e23THw",
+        "opus_post_account_id": "6aedeb42386c37c006241619",
+        "clip_type": "horror"
+      }
+    },
+    {
+      "id": "alliance-edit",
+      "campaign_id": "HeldAlliance",
+      "title": "Alliance revision",
+      "caption": "Alliance clip waiting on a change request.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "TikTok Business",
+        "IG Business"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "change_requested",
+      "note": "revision asked"
+    },
+    {
+      "id": "camp-01",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 01",
+      "caption": "Campaign clip 01 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-02",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 02",
+      "caption": "Campaign clip 02 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-03",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 03",
+      "caption": "Campaign clip 03 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-04",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 04",
+      "caption": "Campaign clip 04 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-05",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 05",
+      "caption": "Campaign clip 05 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-06",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 06",
+      "caption": "Campaign clip 06 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-07",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 07",
+      "caption": "Campaign clip 07 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-08",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 08",
+      "caption": "Campaign clip 08 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-09",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 09",
+      "caption": "Campaign clip 09 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-10",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 10",
+      "caption": "Campaign clip 10 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-11",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 11",
+      "caption": "Campaign clip 11 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    },
+    {
+      "id": "camp-12",
+      "campaign_id": "LiveCampaign",
+      "title": "Campaign clip 12",
+      "caption": "Campaign clip 12 has no rights attestation.",
+      "video": "/samples/sample-a.mp4",
+      "platforms": [
+        "Clipped Motions YouTube",
+        "TikTok Business",
+        "IG Business",
+        "FB Page"
+      ],
+      "ai_disclosure": true,
+      "is_ad": true,
+      "status": "pending"
+    }
+  ]
+}

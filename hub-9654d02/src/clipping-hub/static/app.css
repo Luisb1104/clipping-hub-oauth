@@ -1,0 +1,492 @@
+/* Clipping Hub shell. All colours/sizes come from sky-air-tokens.css. One screen at 390 px and desktop: nothing scrolls. */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font-family:var(--font-sans);color:var(--text-1);background:var(--bg-grad),var(--page-bg);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--accent-1);outline-offset:2px}
+
+/* shell grid: phone = banner / brand+toggle / stage / bottom nav */
+.shell{height:100dvh;max-width:1440px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr) auto;
+  grid-template-areas:"stamp stamp" "brand tg" "stage stage" "nav nav";padding:max(8px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom));gap:8px}
+.stamp{grid-area:stamp;justify-self:center;text-align:center;font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--banner-amber);background:var(--banner-bg);border:1px solid var(--banner-amber);border-radius:var(--r-pill);padding:2px 10px;line-height:1.2;max-width:max-content;opacity:.9}
+.brand{grid-area:brand;display:flex;align-items:center;min-height:var(--tap);color:var(--text-1)}
+.brand img{display:block;height:30px;width:auto}
+.tg{grid-area:tg;display:flex;padding:var(--toggle-pad);border-radius:var(--r-pill);background:var(--toggle-fill);border:1px solid var(--toggle-border);backdrop-filter:blur(var(--panel-blur));-webkit-backdrop-filter:blur(var(--panel-blur));align-self:center}
+.tg button{width:var(--toggle-seg-w);height:var(--toggle-seg-h);border-radius:var(--r-pill);border:0;background:transparent;display:grid;place-items:center;color:var(--toggle-off-fg);padding:0}
+.tg button svg{width:19px;height:19px}
+.tg button[aria-pressed=true]{background:var(--toggle-on-bg);color:var(--toggle-on-fg)}
+.nav{grid-area:nav;display:flex;padding:6px;border-radius:var(--r-pill);background:var(--nav-fill);border:1px solid var(--nav-border);backdrop-filter:blur(var(--panel-blur));-webkit-backdrop-filter:blur(var(--panel-blur));box-shadow:var(--nav-shadow)}
+.nav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:var(--fs-nav-label);font-weight:var(--fw-bold);color:var(--text-2);min-height:var(--nav-item-h);border-radius:var(--r-pill);position:relative;padding:0 2px}
+.nav a svg{width:20px;height:20px}
+.nav a[aria-current=page]{background:var(--nav-active-bg);color:var(--nav-active-text)}
+
+.stage{grid-area:stage;min-height:0;position:relative;overflow:hidden}
+.pane{height:100%;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}   /* a pane that fits never scrolls; a taller one (real iPhone toolbars, bigger text) scrolls inside the stage instead of being clipped */
+.pane.m-tab{animation-name:m-tab}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+/* type + shared bits */
+h1.t{font-size:28px;font-weight:var(--fw-heavy);letter-spacing:-.03em;line-height:1.1;margin:2px 2px 0}
+.lede{font-size:var(--fs-body);color:var(--text-2);line-height:1.4;margin:0 2px}
+.k{font-size:var(--fs-eyebrow);letter-spacing:var(--ls-eyebrow);font-weight:var(--fw-heavy);color:var(--text-2);text-transform:uppercase}
+.sub{font-size:var(--fs-small);color:var(--text-2);line-height:1.4}
+.rowh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.glass{background:var(--panel-fill);border:1px solid var(--panel-border);border-radius:var(--r-card);backdrop-filter:blur(var(--panel-blur));-webkit-backdrop-filter:blur(var(--panel-blur));box-shadow:var(--panel-shadow)}
+.btn{min-height:var(--tap);border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:var(--fw-heavy);font-size:var(--fs-button);border:1px solid transparent;padding:0 16px;white-space:nowrap;color:var(--text-1);background:none}
+.btn.pri{background:var(--accent-grad);color:var(--accent-text);box-shadow:var(--accent-shadow)}
+.btn.gl{background:var(--panel-fill);border-color:var(--panel-border)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:var(--fs-chip);font-weight:var(--fw-heavy);padding:5px 10px;border-radius:var(--r-pill);border:1px solid var(--neutral-line);color:var(--neutral-text);white-space:nowrap;line-height:1.2}
+.chip.warn{color:var(--warn-text);border-color:var(--warn-line);background:var(--warn-fill)}
+.chip.ok{color:var(--ok-text);border-color:var(--ok-line);background:var(--ok-fill)}
+.chip.bad{color:var(--bad-text);border-color:var(--bad-line);background:var(--bad-fill)}
+.chip.dash{border-style:dashed}
+.chip.plan{border-style:dashed;color:var(--text-1);border-color:var(--text-1)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.safe{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:var(--fw-bold);margin:2px 4px 0;line-height:1.35}
+.safe svg{width:16px;height:16px;color:var(--ok-text);flex:none;margin-top:1px}
+.safe small{display:block;font-weight:var(--fw-regular);font-size:12px;color:var(--text-2);margin-top:2px}
+.hatch{background:repeating-linear-gradient(135deg,var(--hatch-line) 0 6px,transparent 6px 13px);border:1px dashed var(--dash-line);border-radius:14px}
+
+/* empty states */
+.empty{padding:16px 18px;display:flex;flex-direction:column;justify-content:center}
+.empty .ic{width:48px;height:48px;border-radius:16px;background:var(--inner-fill);border:1px dashed var(--dash-line);display:grid;place-items:center;color:var(--text-2)}
+.empty .ic svg{width:24px;height:24px}
+.empty h3{font-size:var(--fs-h3);font-weight:var(--fw-heavy);margin:10px 0 4px;line-height:1.2}
+.empty p{font-size:var(--fs-body);color:var(--text-2);line-height:1.45}
+
+/* home */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sum{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:var(--r-inner);min-height:128px}
+.sum .v{font-size:26px;font-weight:var(--fw-black);letter-spacing:-.02em;line-height:1.1;margin-top:2px}
+.sum .chip{margin-top:auto}
+.pane[data-pane=home]>.col{flex:1;min-height:0}
+.pane[data-pane=home] .empty{flex:1;min-height:0}
+
+/* queue */
+.qhead{display:flex;flex-direction:column;gap:10px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--strip-gap)}
+.seg button{min-height:var(--strip-chip-h);border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:var(--fw-heavy);background:var(--panel-fill);border:1px solid var(--panel-border);color:var(--text-2);padding:0 4px}
+.seg button.on{background:var(--nav-active-bg);color:var(--nav-active-text);border-color:transparent}
+.pane[data-pane=queue] #q-empty{min-height:200px}
+.qcard{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0;flex:1}
+.th{position:relative;border-radius:var(--r-thumb);overflow:hidden;display:flex;align-items:flex-end;flex:1;min-height:56px}
+.th2{background:var(--thumb-2)}
+.th svg.pi{position:absolute;left:50%;top:46%;width:34px;height:34px;transform:translate(-50%,-50%);fill:#fff;stroke:none;opacity:.92}
+.th small{position:relative;margin:8px;font-size:var(--fs-micro);font-weight:var(--fw-heavy);color:var(--thumb-label-text);background:var(--thumb-label-bg);padding:3px 8px;border-radius:99px;line-height:1.2}
+.qbody{display:flex;flex-direction:column;gap:8px;padding:0 4px 2px}
+.qbody h3{font-size:18px;font-weight:var(--fw-heavy);line-height:1.2}
+.bt{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
+.bt .btn{padding:0 8px;font-size:14px}
+.gate{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--text-2);line-height:1.35}
+.gate svg{width:15px;height:15px;color:var(--ok-text);flex:none;margin-top:1px}.gate b{color:var(--text-1)}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;font-size:12px;font-weight:var(--fw-bold);color:var(--text-2)}
+.pager button{width:var(--tap);height:var(--tap);border-radius:50%;background:var(--panel-fill);border:1px solid var(--panel-border);font-size:20px;line-height:1;display:grid;place-items:center;padding:0}
+.pager button:disabled{color:var(--disabled-text);border-style:dashed;border-color:var(--disabled-line);cursor:not-allowed}   /* no opacity fade: the arrow keeps >= 3:1 (tested), the dashed border says disabled */
+.pager.one{display:none}
+.foot-actions{display:flex;gap:8px;justify-content:center}
+.foot-actions .btn{flex:1;font-size:14px}
+.glow-once{position:relative}
+
+
+/* compliance checklist: phone = bottom sheet over the stage, desktop = inline in the card */
+.pane[data-pane=queue]{position:relative}
+.chkopen{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:var(--tap);padding:6px 14px;border-radius:var(--r-inner);text-align:left;width:100%}
+.chkopen b{display:block;font-size:14px;font-weight:var(--fw-heavy)}
+.chkopen small{display:block;font-size:var(--fs-micro);color:var(--text-2);margin-top:1px}
+.chkopen .go{font-size:22px;color:var(--text-2)}
+.hint{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:var(--fw-heavy);color:var(--warn-text);margin:0}
+.hint svg{width:15px;height:15px;flex:none}
+.btn:disabled{background:var(--disabled-fill);border:1px dashed var(--disabled-line);color:var(--disabled-text);box-shadow:none;cursor:not-allowed}
+.scrim{position:absolute;inset:0;z-index:4;background:color-mix(in srgb,var(--page-bg) 55%,transparent)}
+.checkbox{display:none;flex-direction:column;gap:6px;padding:12px 14px;max-height:100%;min-height:0}
+.checkbox.open{display:flex;position:absolute;left:0;right:0;bottom:0;z-index:5;background:linear-gradient(var(--inner-fill),var(--inner-fill)),var(--page-bg)}   /* opaque: nothing may show through behind the sheet text */
+.pane.sheet-open .foot-actions{visibility:hidden}   /* the sample buttons sit under the sheet's bottom edge: hide them (and, in app.js, inert) while it is open */
+.chkhead{display:flex;align-items:center;gap:8px}
+.chkhead b{flex:1;font-size:16px;font-weight:var(--fw-heavy)}
+.chkclose{min-height:var(--tap);padding:0 18px;font-size:14px}
+.chklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;min-height:0}
+.chk{display:flex;align-items:center;gap:12px;min-height:var(--tap);padding:4px 2px;font-size:14px;line-height:1.35;cursor:pointer;border-radius:12px}
+.chk input{position:absolute;opacity:0;width:44px;height:44px;margin:0;cursor:pointer}
+.chk .box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--text-2);display:grid;place-items:center;color:transparent;background:var(--inner-fill)}
+.chk .box svg{width:16px;height:16px;stroke-width:3}
+.chk input:checked+.box{background:var(--accent-grad);border-color:transparent;color:var(--accent-text)}
+.chk input:focus-visible+.box{outline:3px solid var(--accent-1);outline-offset:2px}
+.chk .txt{flex:1;min-width:0}
+.chknote{font-size:12px;color:var(--text-2);line-height:1.35;margin:2px 2px 0}
+@media (max-height:760px){.qcard .th{min-height:56px}}
+
+/* channels */
+.slots{display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+.slot{display:flex;align-items:center;gap:12px;padding:10px 12px}
+.slot .gl2{width:44px;height:44px;border-radius:14px;background:var(--inner-fill);border:1px solid var(--panel-border);display:grid;place-items:center;color:var(--text-2);flex:none}
+.slot .gl2 svg{width:22px;height:22px}
+.slot .nm{flex:1;min-width:0;font-weight:var(--fw-heavy);font-size:15px}
+.slot .nm .chips{margin-top:6px}
+.slot .chip{white-space:normal;text-align:left}
+.slot .btn{padding:0 12px;font-size:13px;flex:none}
+
+/* revenue + trends cards */
+.pool,.seat{padding:14px 16px;position:relative;overflow:hidden}
+.ribbon{margin:-14px -16px 12px;min-height:var(--ribbon-h);display:flex;align-items:center;justify-content:center;background:var(--banner-bg);color:var(--banner-amber);font-size:var(--ribbon-fs);font-weight:900;letter-spacing:.12em;text-align:center;padding:0 8px}
+.ptop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ptot{font-size:var(--pool-total-fs);font-weight:var(--pool-total-fw);letter-spacing:-.03em;line-height:1.1;margin:6px 0 2px}
+.pline{font-size:var(--pool-line-fs);color:var(--text-2);line-height:1.4}
+.pmonth{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 2px;padding:6px 0;border-top:1px dashed var(--panel-border)}
+.pmonth b{font-size:18px;font-weight:var(--fw-heavy);letter-spacing:-.02em}
+.psplit{margin-top:6px}
+.prow{display:flex;align-items:center;gap:10px;min-height:32px;padding:5px 0;border-top:1px solid var(--panel-border)}
+.prow .pn{flex:1;min-width:0;font-weight:var(--fw-heavy);font-size:13.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.prow .pn .chip{padding:3px 8px;font-size:11px}
+.prow .pa{flex:none;font-weight:var(--fw-heavy);font-size:14px}
+.prow.tot{border-top:2px solid var(--panel-border);min-height:36px;padding-top:8px}
+.prow.tot .pn{font-size:14.5px}.prow.tot .pa{font-size:16px}
+.seatrow{display:flex;align-items:center;gap:12px}
+.seatrow b{display:block;font-size:16px;font-weight:var(--fw-heavy)}
+.avatar{width:48px;height:48px;flex:none;border-radius:16px}
+.seatbox{margin-top:12px;min-height:84px;display:grid;place-items:center;font-size:13px;font-weight:var(--fw-heavy);color:var(--text-2)}
+
+/* short phones: tighten so nothing scrolls */
+@media (max-height:760px){
+  .sum{min-height:104px;padding:10px 12px}.sum .v{font-size:22px}
+  h1.t{font-size:24px}.empty h3{font-size:18px;margin:6px 0 2px}.empty .ic{width:40px;height:40px}
+  .slot{padding:8px 10px}.qbody h3{font-size:16px}
+  .pane[data-pane=revenue]{gap:6px}
+  .pane[data-pane=revenue] h1.t{font-size:22px}
+  .pool{padding:10px 12px}.ribbon{margin:-10px -12px 8px;min-height:26px;font-size:10px}
+  .ptot{font-size:28px;margin:4px 0 0}
+  .pmonth{margin:2px 0;padding:4px 0}.pmonth b{font-size:15px}
+  .pline{font-size:12px;line-height:1.3}
+  .prow{min-height:26px;padding:3px 0;gap:6px}
+  .prow .pn{font-size:12.5px}.prow .pn .chip{padding:2px 6px;font-size:10.5px}
+  .prow .pa{font-size:13px}
+  .prow.tot{min-height:30px;padding-top:6px}.prow.tot .pn{font-size:13px}.prow.tot .pa{font-size:14px}
+}
+
+/* short phones (e.g. 360x740): compact Channels rows so the four slots and the note fit above the nav with no scroll */
+@media (max-height:760px) and (max-width:899px){
+  .qbody{gap:4px}                                           /* 360x740: with 3 clips the card's content ran 4 to 19 px past the card's bottom edge */
+  .slots{gap:6px}
+  .slot{padding:6px 10px;gap:10px}
+  .slot .gl2{display:none}                                  /* frees ~46 px so the status chip (even after a Connect click: 'Not connected yet') stays on one line */
+  .slot .nm .chips{margin-top:4px;gap:4px}
+  .slot .chip{padding:3px 8px}
+  .slot .btn{padding:0 10px;font-size:12.5px}
+  .pane[data-pane=channels] .safe{font-size:12px;margin-top:0}
+  .pane[data-pane=channels] .safe small{font-size:11px;margin-top:0}
+}
+
+/* very short phones (375x667 and 360x640): the queue card (3 clips) overlapped the Add/Remove sample buttons. Drop its thumbnail and tighten the card so it fits above the nav with no scroll.
+   The 'SAMPLE · not a real clip' chip stays, so the card still says it is a sample. Taller phones (360x740, 390x844) and desktop do not match this query and are unchanged. */
+@media (max-height:700px) and (max-width:899px){
+  /* stamp + clipper batch left too little room: 2+ samples overlapped Add/Remove (pager over #q-add) */
+  .pane[data-pane=queue]{gap:6px}
+  .pane[data-pane=queue] h1.t{font-size:22px}
+  .pane[data-pane=queue] #batch-box{display:none}
+  .qhead{gap:6px}
+  .qcard{gap:0;padding:8px 10px;overflow:hidden;min-height:0}
+  .qcard .th{display:none}
+  .qbody{gap:4px;padding:0 2px;flex:1;min-height:0;overflow:hidden}
+  .qbody h3{font-size:15px;line-height:1.15}
+  .qbody .chips{gap:4px}.qbody .chip{padding:3px 8px}
+  .chkopen{padding:2px 10px;min-height:36px}
+  .bt .btn{min-height:36px}
+  .hint,.gate{display:none}                         /* frees ~60px; SAMPLE chip + checklist remain */
+  .pager{gap:8px;margin-top:2px}
+  .pager button{width:36px;height:36px}
+}
+
+/* 360x740: stamp+batch+thumbnail still crowd the queue card. Same compact as <=700, including hide thumb. */
+@media (max-height:760px) and (max-width:899px){
+  .pane[data-pane=queue]{gap:6px}
+  .pane[data-pane=queue] h1.t{font-size:22px}
+  .pane[data-pane=queue] #batch-box{display:none}
+  .pane[data-pane=queue] .qhead{gap:6px}
+  .pane[data-pane=queue] .qcard{gap:0;padding:8px 10px;overflow:hidden;min-height:0}
+  .pane[data-pane=queue] .qcard .th{display:none}
+  .pane[data-pane=queue] .qbody{gap:4px;padding:0 2px;flex:1;min-height:0;overflow:hidden}
+  .pane[data-pane=queue] .qbody h3{font-size:15px;line-height:1.15}
+  .pane[data-pane=queue] .qbody .chips{gap:4px}
+  .pane[data-pane=queue] .qbody .chip{padding:3px 8px}
+  .pane[data-pane=queue] .chkopen{padding:2px 10px;min-height:36px}
+  .pane[data-pane=queue] .bt .btn{min-height:36px}
+  .pane[data-pane=queue] .hint,
+  .pane[data-pane=queue] .gate{display:none}
+  .pane[data-pane=queue] .pager{gap:8px;margin-top:2px}
+  .pane[data-pane=queue] .pager button{width:36px;height:36px}
+}
+
+
+/* 360x640 only: Channels needed ~9 px more. Tighter gaps and rows; 375x667 and up are unchanged by this rule. */
+@media (max-height:660px) and (max-width:899px){
+  .pane[data-pane=channels]{gap:6px}
+  .pane[data-pane=channels] h1.t{font-size:22px}
+  .pane[data-pane=channels] .lede{font-size:13px;line-height:1.3}
+  .slots{gap:4px}
+  .slot{padding:4px 10px}
+}
+
+/* desktop: top bar with tabs, wide cards */
+@media (min-width:900px){
+  .shell{grid-template-columns:1fr auto 1fr;grid-template-rows:auto auto minmax(0,1fr);grid-template-areas:"stamp stamp stamp" "brand nav tg" "stage stage stage";padding:12px 32px 24px;gap:10px 16px}
+  .stamp{justify-self:center;padding:2px 12px;font-size:10px}
+  .brand img{height:34px}
+  .tg{justify-self:end}
+  .nav{gap:6px;box-shadow:var(--nav-shadow)}
+  .nav a{flex-direction:row;gap:8px;padding:0 20px;font-size:14px;min-height:var(--tap)}
+  .nav a svg{width:18px;height:18px}
+  h1.t{font-size:38px;margin:0 0 6px}.lede{font-size:16px}
+  .pane{gap:18px}
+  /* home desktop grid superseded by hub-declutter block below */
+  .pane[data-pane=home] .col{flex:none}
+  .pane[data-pane=home] .grid2{gap:10px;margin-top:0}
+  .sum{padding:22px;min-height:0}.sum .v{font-size:34px}.sum .sub{font-size:14px}
+  .empty{padding:24px 28px}.empty h3{font-size:24px;margin:14px 0 6px}.empty p{font-size:16px}.empty .ic{width:56px;height:56px}
+  .pane[data-pane=queue]{max-width:860px;width:100%;margin:0 auto}
+  .chkopen,.scrim{display:none!important}
+  .checkbox{display:flex;position:static;background:var(--inner-fill);border-radius:var(--r-inner);padding:10px 14px;gap:2px}
+  .checkbox .chkclose{display:none}
+  .chkhead b{font-size:15px}
+  .chk{min-height:34px;padding:2px;font-size:13.5px;gap:10px}.chk input{width:34px;height:34px}.chk .box{width:22px;height:22px;border-radius:7px}
+  .chknote{margin-top:4px}
+  .pane[data-pane=queue]{max-width:1040px}
+  .qcard .th{flex:0 0 200px}
+  .qbody{gap:10px}.qbody h3{font-size:24px}
+
+  .qcard{flex-direction:row;padding:16px;gap:20px;flex:1}
+  .qcard .th{flex:0 0 200px;min-height:0}
+  .qbody{flex:1;justify-content:center;gap:14px}.qbody h3{font-size:26px}
+  .bt .btn{font-size:15px}
+  .foot-actions{justify-content:flex-start}.foot-actions .btn{flex:none;padding:0 22px}
+  .pane[data-pane=channels]{max-width:1000px;width:100%;margin:0 auto}
+  .slots{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+  .slot{padding:18px 20px}.slot .nm{font-size:18px}.slot .btn{font-size:14px;padding:0 18px}
+  .pane[data-pane=trends]{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start;align-content:start;max-width:1100px;width:100%;margin:0 auto}
+  .pane[data-pane=revenue]{max-width:720px;width:100%;margin:0 auto}
+  .pool,.seat{padding:22px 26px}.ribbon{margin:-22px -26px 18px}
+  .ptot{font-size:var(--pool-total-fs-mac)}
+  .pmonth b{font-size:22px}
+  .prow{min-height:40px;padding:8px 0}.prow .pn{font-size:15px}.prow .pa{font-size:16px}
+  .prow.tot .pn{font-size:16px}.prow.tot .pa{font-size:18px}
+  .pane[data-pane=trends] .empty{min-height:220px;margin-top:62px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Phones: home — greeting first, then cards, then empty/safe.
+   display:contents lets us reorder without changing desktop HTML.
+   .col was flex:1;min-height:0 and shrank under .grid2 (Luis 11:48). */
+@media (max-width:899px){
+  .pane[data-pane=home]{display:flex;flex-direction:column;gap:10px}
+  .pane[data-pane=home]>.col{display:contents}
+  .pane[data-pane=home] #h-home{order:1;margin:2px 2px 0}
+  .pane[data-pane=home] .lede{order:2}
+  .pane[data-pane=home] .grid2{order:3;flex:none;margin-top:2px}
+  .pane[data-pane=home] .empty{order:4;flex:none;min-height:auto;padding:12px 14px}
+  .pane[data-pane=home] .empty h3{margin:8px 0 4px;font-size:16px}
+  .pane[data-pane=home] .empty p{font-size:13px}
+  .pane[data-pane=home] .safe{order:5;margin:4px 2px 8px}
+  .pane[data-pane=home] .sum{min-height:108px;padding:12px}
+  .pane[data-pane=home] .sum .v{font-size:22px}
+}
+
+/* Phones: Channels 2-col grid; cards are compact columns (name/platform/badges/link). Scroll OK when >4 Opus rows. */
+@media (max-width:899px){
+  .slots{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+  .slot{flex-direction:column;align-items:stretch;gap:4px;padding:8px}
+  .slot .gl2{display:none}
+  .slot .nm{font-size:13px}
+  .slot .nm .chips{margin-top:4px;gap:4px;flex-wrap:wrap}
+  .slot .btn{width:100%;padding:0 8px;font-size:12.5px}
+  .channels-slot{gap:3px;padding:8px}
+  .channels-slot .nm{font-size:13px}
+  .channels-slot .plat{font-size:11px}
+  .channels-slot .chip{padding:2px 6px;font-size:10px}
+  .channels-slot .chan-link{
+    font-size:10px;line-height:1.25;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  }
+  .pane[data-pane=channels] .safe{flex-direction:row;align-items:center;font-size:12px;line-height:1.3;margin-top:0}
+  .pane[data-pane=channels] .safe small{display:none}
+}
+
+/* approvals inbox + nav badge + events */
+.nav a .badge{position:absolute;top:2px;right:calc(50% - 18px);min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:var(--accent-1);color:var(--accent-text);font-size:10px;font-weight:900;line-height:16px;text-align:center}
+.gate-line{font-size:12.5px;line-height:1.35;color:var(--text-2);margin:0 2px}
+.gate-line b{color:var(--text-1)}
+.appr-list{display:flex;flex-direction:column;gap:8px;min-height:0}
+.appr-card{padding:10px;display:flex;flex-direction:column;gap:8px}
+.appr-card video{width:100%;max-height:140px;border-radius:12px;background:#000;object-fit:contain}
+.appr-card .cap{font-size:14px;font-weight:var(--fw-heavy);line-height:1.3}
+.appr-card .meta{font-size:12px;color:var(--text-2);line-height:1.35}
+.appr-card .plats{display:flex;flex-wrap:wrap;gap:4px}
+.appr-card .bt{display:flex;gap:6px;flex-wrap:wrap}
+.appr-card .bt .btn{flex:1;min-width:0;padding:0 8px;font-size:12.5px}
+.appr-note{display:flex;gap:6px;align-items:center}
+.appr-note input{flex:1;min-width:0;min-height:var(--tap);border-radius:var(--r-pill);border:1px solid var(--panel-border);background:var(--inner-fill);padding:0 12px;font:inherit;color:var(--text-1)}
+.appr-side{gap:6px;margin-top:4px}
+.events{padding:8px 10px;display:flex;flex-direction:column;gap:0;max-height:160px;overflow-y:auto}
+.ev{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:1px solid var(--panel-border);font-size:12.5px;line-height:1.3}
+.ev:first-child{border-top:0;padding-top:2px}
+.ev b{font-size:13px;font-weight:var(--fw-heavy)}
+.ev .when{font-size:11px;color:var(--text-2)}
+.ev-empty{padding:10px 0;font-size:13px;color:var(--text-2);text-align:center}
+
+@media (max-height:760px) and (max-width:899px){
+  .pane[data-pane=approvals]{gap:4px}
+  .pane[data-pane=approvals] h1.t{font-size:20px}
+  .gate-line{font-size:11px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .appr-list{gap:6px}
+  .appr-card{padding:6px 8px;gap:4px}
+  .appr-card video{max-height:72px}
+  .appr-card .cap{font-size:12.5px;line-height:1.2}
+  .appr-card .meta{font-size:11px}
+  .appr-card .plats .chip{padding:2px 6px;font-size:10px}
+  .appr-card .bt{gap:4px}
+  .appr-card .bt .btn{font-size:11.5px;min-height:36px;padding:0 6px}
+  .appr-side{margin-top:0}
+  .pane[data-pane=approvals].has-pending .appr-side{display:none} /* keep one screen: alerts move under empty/desk */
+  .nav a{font-size:10px;gap:0}
+  .nav a svg{width:18px;height:18px}
+}
+@media (max-height:900px) and (max-width:899px){
+  .pane[data-pane=approvals].has-pending .appr-side{display:none}
+  .appr-card video{max-height:88px}
+}
+
+@media (min-width:900px){
+  .pane[data-pane=approvals]{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr);gap:16px;align-items:start;max-width:1100px;width:100%;margin:0 auto}
+  .pane[data-pane=approvals] .col.wide{grid-column:1 / -1}
+  .appr-list{gap:10px;max-height:min(560px, calc(100dvh - 220px));overflow-y:auto}
+  .appr-card{padding:12px;gap:8px}
+  .appr-card video{max-height:140px}
+  .events{max-height:min(420px, calc(100dvh - 260px))}
+  .nav a .badge{right:8px;top:6px}
+}
+
+/* Clipper batch (read-only mirror) */
+.batch{padding:12px 14px;margin-top:8px}
+.batch-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:160px;overflow:auto}
+.batch-list li{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px}
+.batch-list .bt{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.batch-list .bs{flex:none}
+
+.synced-line{font-size:11px;color:var(--text-2);margin:4px 0 0;line-height:1.3}
+
+/* hub-declutter v27: bell + drawer (never covers videos); channels status; accurate stamp */
+.alerts-bell-wrap{display:inline-flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.alerts-bell{min-height:36px;min-width:36px;padding:0 10px;border-radius:var(--r-pill);border:1px solid var(--panel-border);background:var(--panel-fill);display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:var(--text-1);cursor:pointer}
+.alerts-bell .bell-count{display:inline-flex;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--banner-amber);color:#1a1200;font-size:11px;align-items:center;justify-content:center}
+.alerts-bell .bell-count[hidden],#alerts-toggle[hidden],#alerts-hint[hidden],.alerts-dropdown[hidden]{display:none!important}
+/* Drawer sits UNDER the approve list — never position:absolute over videos */
+.alerts-drawer{display:none;flex-direction:column;gap:6px;margin-top:8px;padding:10px;border-radius:var(--r-card);border:1px solid var(--panel-border);background:var(--panel-fill);max-height:min(220px,30vh);min-height:0}
+.alerts-drawer.open{display:flex}
+.alerts-drawer-bar{display:flex;align-items:center;gap:8px}
+.alerts-drawer-bar .k{font-weight:800;flex:1}
+.alerts-drawer .events{flex:1;min-height:0;overflow-y:auto;max-height:none;padding:0;border:0;background:transparent;box-shadow:none}
+.alerts-drawer .ev{padding:8px 4px;border-bottom:1px solid var(--panel-border)}
+.alerts-drawer .ev:last-child{border-bottom:0}
+.appr-head .rowh{align-items:center;gap:8px;flex-wrap:wrap}
+.alerts-enable{min-height:32px;padding:0 10px;font-size:12px}
+/* Approvals: single column — videos first and full width */
+.pane[data-pane=approvals]{display:flex;flex-direction:column;gap:8px;max-width:920px;width:100%;margin:0 auto}
+.pane[data-pane=approvals] .appr-list{gap:10px;max-height:min(620px, calc(100dvh - 200px));overflow-y:auto}
+.pane[data-pane=approvals] .appr-card video{max-height:220px;width:100%;background:#000}
+.pane[data-pane=approvals] .appr-side{display:none!important}
+@media (min-width:900px){
+  .pane[data-pane=home]{
+    display:grid;
+    grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);
+    grid-template-rows:auto minmax(0,1fr);
+    align-items:start;
+    gap:16px 20px;
+    max-width:1280px;
+    width:100%;
+    margin:0 auto;
+  }
+  .pane[data-pane=home] > .home-appr{
+    grid-column:1; grid-row:1 / span 2; min-height:0;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .pane[data-pane=home] > .home-appr .appr-list{max-height:min(640px, calc(100dvh - 160px));overflow-y:auto;gap:12px}
+  .pane[data-pane=home] > .home-appr .appr-card{padding:14px}
+  .pane[data-pane=home] > .home-appr .appr-card video{max-height:180px}
+  .pane[data-pane=home] > .col{grid-column:2;grid-row:1;flex:none}
+  .pane[data-pane=home] > .grid2{
+    grid-column:2;grid-row:2;grid-template-columns:1fr !important;
+    gap:10px;grid-auto-rows:auto !important;margin-top:0;
+  }
+  .pane[data-pane=home] > .grid2 .sum{min-height:0;padding:12px 14px}
+  .pane[data-pane=home] > .grid2 .sum .v{font-size:22px}
+  .pane[data-pane=home] > .col .empty{display:none}
+  .pane[data-pane=home] > .col .safe{display:none}
+  .pane[data-pane=approvals] .appr-list{max-height:min(680px, calc(100dvh - 180px))}
+  .pane[data-pane=approvals] .appr-card video{max-height:260px}
+}
+@media (max-width:899px){
+  .pane[data-pane=home] > .home-appr{order:3;margin-top:4px}
+  .pane[data-pane=home] > .home-appr .appr-card video{max-height:100px}
+  .pane[data-pane=approvals] .appr-card video{max-height:160px}
+}
+/* Channels status cards: column stack so name/platform/badges/link never overlap */
+.channels-slot{
+  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+  gap:6px;min-width:0;width:100%;box-sizing:border-box;
+}
+.channels-slot .nm{flex:none;min-width:0;font-weight:800;line-height:1.25;overflow-wrap:anywhere}
+.channels-slot .plat{flex:none;font-size:12px;color:var(--text-2);line-height:1.3}
+.channels-slot .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:0;min-width:0}
+.channels-slot .chip{max-width:100%;overflow-wrap:anywhere;white-space:normal}
+.channels-slot .chan-link{
+  display:block;min-width:0;max-width:100%;margin-top:2px;
+  font-size:12px;color:var(--text-2);line-height:1.35;
+  overflow-wrap:anywhere;word-break:break-word;
+}
+.channels-slot .chan-link.muted{opacity:.75;text-decoration:none;pointer-events:none}
+#channels-slots{min-width:0}
+#channels-slots .channels-slot{min-width:0}
+
+/* Queue card containment (all sizes): the card takes the space left in the pane and scrolls inside, so its content never
+   spills over the tabs above or the Add/Remove sample buttons below (393x852 standalone, 1280x800). Buttons stay in normal flow. */
+.pane[data-pane=queue]{container-type:size;container-name:queue}
+.pane[data-pane=queue] .qhead,.pane[data-pane=queue] .foot-actions,.pane[data-pane=queue] #batch-box{flex:none}
+.pane[data-pane=queue] .qcard{flex:1 1 auto;min-height:0;overflow:hidden}
+.pane[data-pane=queue] .qbody{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;justify-content:safe center}
+.pane[data-pane=queue] .qcard .th{flex-shrink:0}
+/* compact by USABLE pane height (after safe-area insets, stamp, header, nav), not raw viewport height */
+@container queue (max-height:620px){
+  #batch-box{display:none}
+  .qcard{gap:0;padding:8px 10px}
+  .qcard .th{display:none}
+  .qbody{gap:4px;padding:0 2px}
+  .qbody h3{font-size:15px;line-height:1.15}
+  .chkopen{padding:2px 10px;min-height:36px}
+  .bt .btn{min-height:36px}
+  .hint,.gate{display:none}
+  .pager{gap:8px;margin-top:2px}
+  .pager button{width:36px;height:36px}
+}
+
+.dest-line{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.dest-block{color:var(--warn-text);font-weight:700}
+
+/* Approve All sheet: fits 393x852 standalone (safe areas) and desktop; list scrolls inside, buttons always visible */
+.appr-all-btn{min-height:36px;padding:0 12px;font-size:12.5px;flex:none}
+.aa-scrim{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:color-mix(in srgb,var(--page-bg) 70%,transparent);
+  padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+.aa-scrim[hidden]{display:none}
+.aa-card{width:100%;max-width:640px;max-height:100%;display:flex;flex-direction:column;gap:8px;padding:14px;min-height:0;
+  background:linear-gradient(var(--inner-fill),var(--inner-fill)),var(--page-bg)}
+.aa-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.aa-head b{font-size:17px}
+.aa-note{font-size:12px;color:var(--text-2);margin:0;line-height:1.35}
+.aa-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:8px}
+.aa-sec{font-size:12px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;margin:4px 0 2px}
+.aa-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.aa-list li,.aa-priv{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border:1px solid var(--panel-border);border-radius:12px;font-size:12.5px;line-height:1.3;overflow-wrap:anywhere}
+.aa-list li span,.aa-priv span{color:var(--text-2);font-size:11.5px}
+.aa-priv{border:2px solid var(--warn-text)}.aa-priv .aa-sec{color:var(--warn-text);margin:0}.aa-priv p{margin:2px 0 0;font-size:12px}
+.aa-result{flex:none;font-size:13px;line-height:1.35;max-height:30vh;overflow-y:auto}.aa-result ul{margin:4px 0 0;padding-left:18px}
+.aa-bt{display:flex;gap:8px;flex:none}.aa-bt .btn{flex:1}
+@media (min-width:900px){.aa-scrim{align-items:center}.aa-card{max-height:min(720px,calc(100dvh - 48px))}}

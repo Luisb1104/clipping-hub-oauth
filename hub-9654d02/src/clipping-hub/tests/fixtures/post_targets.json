@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "poster": "opus",
+  "note": "Synthetic fixture for this private draft. Channel ids match the ids already named by the imported tests. No tokens, no refresh secrets, no live grant files.",
+  "type_routes": {
+    "horror": "MAIN",
+    "campaign": "PAID",
+    "gta": "GAMING"
+  },
+  "campaign_rules": {
+    "cod": {
+      "hold": false,
+      "deny_platforms": ["Clipped Motions YouTube", "FB Page"],
+      "reason": "campaign_tt_ig_only"
+    },
+    "heldalliance": {
+      "hold": true,
+      "deny_platforms": [],
+      "reason": "campaign_held"
+    }
+  },
+  "targets": {
+    "MAIN": {
+      "name": "Clipped Motions",
+      "handle": "@clippedmotions",
+      "yt": "UCgMuVjQmB9WvZtSz4e23THw",
+      "opus_post_account_id": "6aedeb42386c37c006241619",
+      "whop": ""
+    },
+    "PAID": {
+      "name": "Clipped Motions Clips",
+      "handle": "@clippedmotionsclips",
+      "yt": "UC8TrAT8V-HacqYlqqqzIQKg",
+      "opus_post_account_id": "6aedf5ffb09f11b7595325ed",
+      "whop": ""
+    },
+    "GAMING": {
+      "name": "Clipped Motions Gaming",
+      "handle": "",
+      "yt": "UC7fAgyeOwAKZYFAbcyc2Zig",
+      "opus_post_account_id": "6aee516c386c37c006246b12",
+      "whop": ""
+    }
+  },
+  "accounts": {
+    "MAIN": {
+      "youtube": {
+        "provider": "opus",
+        "account_name": "Clipped Motions",
+        "account_id": "6aedeb42386c37c006241619",
+        "external_id": "UCgMuVjQmB9WvZtSz4e23THw",
+        "auth_verified": false
+      },
+      "tiktok": {
+        "provider": "tiktok_business",
+        "account_name": "Clipped Motions",
+        "account_id": "tt-synthetic-main",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "instagram": {
+        "provider": "instagram_graph",
+        "account_name": "Clipped Motions",
+        "account_id": "ig-synthetic-main",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "facebook": {
+        "provider": "facebook_reels",
+        "account_name": "Clipped Motions",
+        "account_id": "fb-synthetic-main",
+        "external_id": "",
+        "auth_verified": false
+      }
+    },
+    "PAID": {
+      "youtube": {
+        "provider": "opus",
+        "account_name": "Clipped Motions Clips",
+        "account_id": "6aedf5ffb09f11b7595325ed",
+        "external_id": "UC8TrAT8V-HacqYlqqqzIQKg",
+        "auth_verified": false
+      },
+      "tiktok": {
+        "provider": "tiktok_business",
+        "account_name": "Clipped Motions Clips",
+        "account_id": "tt-synthetic-paid",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "instagram": {
+        "provider": "instagram_graph",
+        "account_name": "Clipped Motions Clips",
+        "account_id": "ig-synthetic-paid",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "facebook": {
+        "provider": "facebook_reels",
+        "account_name": "Clipped Motions Clips",
+        "account_id": "fb-synthetic-paid",
+        "external_id": "",
+        "auth_verified": false
+      }
+    },
+    "GAMING": {
+      "youtube": {
+        "provider": "opus",
+        "account_name": "Clipped Motions Gaming",
+        "account_id": "6aee516c386c37c006246b12",
+        "external_id": "UC7fAgyeOwAKZYFAbcyc2Zig",
+        "auth_verified": false
+      },
+      "tiktok": {
+        "provider": "tiktok_business",
+        "account_name": "Clipped Motions Gaming",
+        "account_id": "tt-synthetic-gaming",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "instagram": {
+        "provider": "instagram_graph",
+        "account_name": "Clipped Motions Gaming",
+        "account_id": "ig-synthetic-gaming",
+        "external_id": "",
+        "auth_verified": false
+      },
+      "facebook": {
+        "provider": "facebook_reels",
+        "account_name": "Clipped Motions Gaming",
+        "account_id": "fb-synthetic-gaming",
+        "external_id": "",
+        "auth_verified": false
+      }
+    }
+  }
+}
