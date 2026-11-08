@@ -38,7 +38,10 @@ TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=u
 THEMES = ("light", "dark")
 STATUSES = ("pending", "approved", "skipped", "edit")
 ACTIONS = {"approve": "approved", "skip": "skipped", "edit": "edit", "undo": "pending"}
-APPROVAL_STATUSES = ("pending", "approved", "rejected", "change_requested", "scheduled", "label_pending")
+APPROVAL_STATUSES = (
+    "pending", "approved", "rejected", "change_requested", "scheduled", "label_pending",
+    "readback_ok", "readback_mismatch", "readback_failed", "echo_unconfirmed",
+)
 APPROVAL_DECISIONS = ("approved", "rejected", "change_requested")
 PLATFORMS = ("Clipped Motions YouTube", "TikTok Business", "IG Business", "FB Page")
 EVENT_TYPES = ("approval_waiting", "post_sent", "post_scheduled", "job_failed", "payout")
@@ -396,6 +399,19 @@ def _clean_item(c):
         "rights_ok": c.get("rights_ok") is True,
         "campaign_terms_ok": c.get("campaign_terms_ok") is True,
     }
+    # Disclosure facts from reconcile. A string echo is not a label switched off,
+    # and a user confirmation is not an API echo.
+    echo = c.get("label_api_echo")
+    if isinstance(echo, str) and echo.strip():
+        item["label_api_echo"] = echo.strip()[:32]
+    if c.get("label_user_confirmed") is True:
+        item["label_user_confirmed"] = True
+    source = c.get("label_confirm_source")
+    if isinstance(source, str) and source.strip():
+        item["label_confirm_source"] = source.strip()[:80]
+    confirmed_at = c.get("label_confirmed_at")
+    if isinstance(confirmed_at, str) and confirmed_at.strip():
+        item["label_confirmed_at"] = confirmed_at.strip()[:40]
     try:
         import destination_routing as _dr
         item.update(_dr.clean_stamp(c))     # creation-time destination stamp (read-only here; never reassigned)
@@ -500,7 +516,33 @@ def parse_tick_force(raw) -> bool:
     return False
 
 
+def ledger_upload_gate(item):
+    """Skip or fail closed before any upload. Does not write a ledger or approvals."""
+    try:
+        import ledger_dedupe as _dedupe
+    except Exception:
+        return {"action": "fail", "reason": "ledger_unreadable", "video_id": ""}
+    try:
+        return _dedupe.check_upload(item if isinstance(item, dict) else {})
+    except Exception:
+        return {"action": "fail", "reason": "ledger_unreadable", "video_id": ""}
+
+
+def _annotate_ledger_gate(item):
+    if not isinstance(item, dict) or item.get("status") != "pending":
+        if isinstance(item, dict):
+            item.pop("ledger_upload_reason", None)
+        return
+    gate = ledger_upload_gate(item)
+    if gate.get("action") == "proceed":
+        item.pop("ledger_upload_reason", None)
+    else:
+        item["ledger_upload_reason"] = str(gate.get("reason") or "ledger_unreadable")[:80]
+
+
 def approvals_payload(data):
+    for item in data.get("items") or []:
+        _annotate_ledger_gate(item)
     pending = sum(1 for i in data["items"] if i["status"] == "pending")
     return dict(data, pending=pending)
 
@@ -574,6 +616,19 @@ def _apply_decision(data, body):
     """Single per-item decide path (validation, gates, post-Approve hooks). Caller holds approvals_lock and saves.
     Shared by POST {op:decide} and POST {op:approve_batch}. Returns (item, changed, extra)."""
     extra = {}
+    if isinstance(body, dict) and body.get("status") == "approved":
+        iid = body.get("id")
+        current = next((i for i in data.get("items") or [] if i.get("id") == iid), None)
+        if current is not None and current.get("status") == "pending":
+            gate = ledger_upload_gate(current)
+            if gate.get("action") == "fail":
+                raise BadRequest(str(gate.get("reason") or "ledger_unreadable")[:80])
+            if gate.get("action") == "skip":
+                return current, False, {
+                    "skipped": True,
+                    "reason": gate.get("reason"),
+                    "outcome": "skipped",
+                }
     data, item, changed = decide_approval(data, body)
     if changed:
         # Stub only: CLIP_AUTOPOST_ENABLED default off. Marks scheduled +
@@ -672,6 +727,9 @@ def approve_action(item, label_step=None):
         return ""
     if item.get("needs_destination") or item.get("route_blocked") or item.get("held"):
         return ""
+    gate = ledger_upload_gate(item)
+    if gate.get("action") != "proceed":
+        return ""
     if _public_publish_enabled():
         preview = item.get("public_preview") if isinstance(item.get("public_preview"), dict) else {}
         if preview.get("record_kind") == "dispatch" and preview.get("will_dispatch_any") and preview.get("ui_kind") == "public":
@@ -726,6 +784,20 @@ def approve_batch(ap, req):
             results.append({"id": iid, "ok": False, "error": "unknown id"}); continue
         if item.get("status") != "pending":
             results.append({"id": iid, "ok": False, "error": "not_pending:" + str(item.get("status"))}); continue
+        gate = ledger_upload_gate(item)
+        if gate.get("action") == "fail":
+            results.append({
+                "id": iid, "ok": False, "posted": False, "outcome": "failed",
+                "status": item.get("status"), "error": str(gate.get("reason") or "ledger_unreadable")[:120],
+            })
+            continue
+        if gate.get("action") == "skip":
+            results.append({
+                "id": iid, "ok": False, "posted": False, "outcome": "skipped",
+                "status": item.get("status"), "reason": gate.get("reason"),
+                "error": str(gate.get("reason") or "")[:120],
+            })
+            continue
         act = approve_action(item)
         if not act:
             results.append({"id": iid, "ok": False, "error": "not_eligible:" + str(item.get("destination_reason") or item.get("route_block_reason") or "")[:80]}); continue
@@ -800,7 +872,7 @@ def approve_batch(ap, req):
             results.append({"id": iid, "ok": False, "error": type(ex).__name__})
     def _bucket(r):
         name = r.get("outcome")
-        if name in ("success", "partial", "blocked", "failed", "unknown", "manual", "private_uploaded"):
+        if name in ("success", "partial", "blocked", "failed", "unknown", "manual", "private_uploaded", "skipped"):
             return name
         return "success" if r.get("ok") and r.get("posted") else ("approved" if r.get("ok") else "failed")
 
@@ -814,6 +886,7 @@ def approve_batch(ap, req):
         "unknown": sum(1 for r in results if _bucket(r) == "unknown"),
         "manual": sum(1 for r in results if _bucket(r) == "manual"),
         "private_uploaded": sum(1 for r in results if _bucket(r) == "private_uploaded"),
+        "skipped": sum(1 for r in results if _bucket(r) == "skipped"),
         "results": results,
         "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
     }

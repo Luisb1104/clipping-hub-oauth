@@ -722,6 +722,15 @@ def execute_private_proof(*, item_id, channel, channel_id, sample, ledger, token
     lock = _lock(dest)
     called = False
     try:
+        import ledger_dedupe as _dedupe
+        gate = _dedupe.check_upload({"id": str(item_id or "")}, sha256=sha, channel_id=pinned)
+        if gate.get("action") == "fail":
+            return _result("refused", reason=str(gate.get("reason") or "ledger_unreadable")[:80], channel_id=pinned)
+        if gate.get("action") == "skip":
+            return _result(
+                "duplicate", reason=gate.get("reason") or "already_uploaded",
+                video_id=gate.get("video_id"), called=False, channel_id=pinned,
+            )
         hit = find_existing_youtube(
             item_id=str(item_id or ""), sha256=sha, channel_id=pinned, exclude=dest,
         )

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "sample-07",
+      "status": "pending",
+      "youtube_video_id": "",
+      "privacy": "private",
+      "ai_disclosure": true,
+      "title": "Sample 07",
+      "caption": "Sample 07",
+      "platforms": ["Clipped Motions YouTube"]
+    }
+  ]
+}

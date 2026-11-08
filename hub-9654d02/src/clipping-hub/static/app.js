@@ -686,6 +686,7 @@ function adoptChannels(s) { channels = s || { empty: true, channels: [] }; rende
   var aa = { batchId: "", entries: [], inFlight: false, done: false };
   function apprAction(item) {
     if (!item || item.status !== "pending" || item.needs_destination === true || item.route_blocked || item.held) return "";
+    if (item.ledger_upload_reason) return "";
     if (state && state.public_publish_enabled) {
       var preview = item.public_preview || {};
       if (preview.record_kind === "dispatch" && preview.will_dispatch_any && preview.ui_kind === "public") return "public_review";
@@ -698,6 +699,7 @@ function adoptChannels(s) { channels = s || { empty: true, channels: [] }; rende
   function aaEligible() { return ((approvals && approvals.items) || []).filter(function (i) { return !!apprAction(i); }); }
   function aaSkipReason(item) {
     if (!item) return "missing";
+    if (item.ledger_upload_reason) return String(item.ledger_upload_reason);
     if (item.status === "change_requested") return "change_requested";
     if (item.status !== "pending") return "status:" + (item.status || "unknown");
     if (item.needs_destination) return item.destination_reason || "needs_destination";
@@ -891,23 +893,27 @@ function adoptChannels(s) { channels = s || { empty: true, channels: [] }; rende
         return;
       }
       aa.done = true; c.hidden = true; $("#aa-cancel").textContent = "Close";
-      var b = res.body.batch, bad = (b.results || []).filter(function (x) { return !x.ok; });
+      var b = res.body.batch, bad = (b.results || []).filter(function (x) { return !x.ok && x.outcome !== "skipped"; });
+      var skippedRows = (b.results || []).filter(function (x) { return x.outcome === "skipped"; });
       var warn = (b.results || []).filter(function (x) { return x.ok && x.warning; });
       var partialN = b.partial || 0, unknownN = b.unknown || 0, blockedN = b.blocked || 0;
       var privateN = b.private_uploaded || 0;
-      var headline = (privateN && !partialN && !unknownN && !blockedN && !(b.success || 0) && !(b.failed || 0))
+      var skippedN = b.skipped || skippedRows.length || 0;
+      var headline = (privateN && !partialN && !unknownN && !blockedN && !(b.success || 0) && !(b.failed || 0) && !skippedN)
         ? (privateN + " private uploads. Not a public post." + (b.replayed ? " (already done)" : ""))
         : (partialN || unknownN || blockedN)
         ? ("Not fully approved. " + (b.success || 0) + " succeeded, " + partialN + " partial, " +
           unknownN + " unconfirmed, " + blockedN + " blocked, " + (b.failed || 0) + " failed" +
+          (skippedN ? (", " + skippedN + " skipped") : "") +
           (b.replayed ? " (already done)" : ""))
-        : (b.approved + " approved" + (b.failed ? (", " + b.failed + " failed") : "") + (b.replayed ? " (already done)" : ""));
+        : (b.approved + " approved" + (skippedN ? (", " + skippedN + " skipped") : "") + (b.failed ? (", " + b.failed + " failed") : "") + (b.replayed ? " (already done)" : ""));
       var detail = (b.results || []).map(function (x) {
         var pub = x.public_publish;
         if (!pub || !pub.platforms) return "";
         return "<li>" + esc(x.id) + ": " + esc(x.outcome || (x.ok ? "ok" : "failed")) + " · " + esc(aaPubText(pub)) + "</li>";
       }).join("");
       r.innerHTML = "<b>" + headline + "</b>" +
+        (skippedRows.length ? "<ul>" + skippedRows.map(function (x) { return "<li>" + esc(x.id) + ": skipped · " + esc(x.reason || x.error || "skipped") + "</li>"; }).join("") + "</ul>" : "") +
         (bad.length ? "<ul>" + bad.map(function (x) { return "<li>" + esc(x.id) + ": " + esc(x.error || x.outcome || "failed") + "</li>"; }).join("") + "</ul>" : "") +
         (warn.length ? "<ul>" + warn.map(function (x) { return "<li>" + esc(x.id) + ": approved; " + esc(x.warning) + "</li>"; }).join("") + "</ul>" : "") +
         (detail ? "<ul>" + detail + "</ul>" : "");

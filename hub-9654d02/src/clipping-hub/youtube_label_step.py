@@ -1376,6 +1376,13 @@ def opus_upload_private(
     if not job_id:
         raise RuntimeError("opus_missing_job_id")
 
+    import ledger_dedupe as _dedupe
+    gate = _dedupe.check_upload(item, channel_id=str(route.get("channel_id") or ""))
+    if gate.get("action") == "fail":
+        raise RuntimeError(str(gate.get("reason") or "ledger_unreadable"))
+    if gate.get("action") == "skip":
+        raise RuntimeError(str(gate.get("reason") or "already_uploaded"))
+
     def _resolve_video_for_post(post_id):
         """List posts and take video id only from the matching postId row."""
         listed = opus_http_list_posts_for_project(project_id, token=token, http_json=http_json)
@@ -1630,6 +1637,7 @@ def run_after_approve(
         out["error"] = "bad_item"
         return out
     # Storyblocks / routing guard before any Opus or YouTube call
+    route = {}
     try:
         import schedule_hook as _sched
         route = _sched.route_for_item(item) or {}
@@ -1651,6 +1659,24 @@ def run_after_approve(
         notify_fail(item, out["error"], push_fn=push_fn)
         return out
     ch = dest
+
+    try:
+        import ledger_dedupe as _dedupe
+        gate = _dedupe.check_upload(item, channel_id=str((route or {}).get("channel_id") or ""))
+    except Exception:
+        gate = {"action": "fail", "reason": "ledger_unreadable", "video_id": ""}
+    if gate.get("action") == "fail":
+        out["ok"] = False
+        out["error"] = str(gate.get("reason") or "ledger_unreadable")[:200]
+        out["reason"] = out["error"]
+        return out
+    if gate.get("action") == "skip":
+        out["ok"] = False
+        out["skipped"] = True
+        out["error"] = str(gate.get("reason") or "")[:200]
+        out["reason"] = out["error"]
+        out["video_id"] = gate.get("video_id")
+        return out
 
     if needs_oauth(ch):
         url, err = build_auth_url(channel=ch, approval_id=str(item.get("id") or ""))

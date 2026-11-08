@@ -518,7 +518,28 @@ def youtube_upload(item, row, *, token, http, file_bytes, expected_channel_id=No
     Paid placement returns before any request. Success is a private video id
     on the bound channel. It does not promote the video. A missing synthetic
     echo is not a confirmed label. http=None uses the stdlib insert client.
+    A video id already in the private-proof, promote, or post ledger is not
+    inserted again.
     """
+    import ledger_dedupe as _dedupe
+    gate = _dedupe.check_upload(
+        item if isinstance(item, dict) else {},
+        sha256=str((row or {}).get("artifact_sha256") or ""),
+        channel_id=str(expected_channel_id or (row or {}).get("bound_channel_id") or ""),
+    )
+    if gate.get("action") == "fail":
+        reason = str(gate.get("reason") or "ledger_unreadable")
+        return {
+            "ok": False, "called": False, "reason": reason, "error": reason,
+            "transport": "youtube_resumable_upload",
+        }
+    if gate.get("action") == "skip":
+        reason = str(gate.get("reason") or "")
+        return {
+            "ok": False, "called": False, "reason": reason, "error": reason,
+            "video_id": gate.get("video_id") or "",
+            "transport": "youtube_resumable_upload",
+        }
     disc = row.get("disclosures") or {}
     if disc.get("paid"):
         return {

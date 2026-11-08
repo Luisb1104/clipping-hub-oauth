@@ -122,7 +122,26 @@ def publish_after_approve(
             out["platforms"].append(prow)
             continue
 
-        # youtube_flow or opus_post — idempotent lock
+        # youtube_flow or opus_post — idempotent lock.
+        # A ledger video id skips before begin(), so a failed row is not left
+        # behind for a later retry to upload again.
+        if step.get("key") == "youtube" or action == "youtube_flow":
+            import ledger_dedupe as _dedupe
+            gate = _dedupe.check_upload(
+                item, channel_id=str(route.get("channel_id") or ""),
+            )
+            if gate.get("action") == "fail":
+                prow["status"] = "failed"
+                prow["error"] = str(gate.get("reason") or "ledger_unreadable")[:200]
+                any_fail = True
+                out["platforms"].append(prow)
+                continue
+            if gate.get("action") == "skip":
+                prow["status"] = "skipped"
+                prow["error"] = str(gate.get("reason") or "")[:200]
+                prow["opus_post_id"] = gate.get("video_id")
+                out["platforms"].append(prow)
+                continue
         acquired, existing = idem.begin(job_id, step["key"], path=ledger_path)
         if not acquired:
             prow["skipped_idempotent"] = True

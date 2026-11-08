@@ -167,7 +167,7 @@ def test_ledger_hit_does_not_insert_or_promote_without_the_named_action(tmp_path
         runner=lambda item, row: calls.append("insert") or {"ok": True, "called": True},
     )
     assert blocked["called"] is False
-    assert blocked["reason"] == "existing_video_reconcile"
+    assert blocked["reason"] == "already_uploaded:" + VIDEO
     assert calls == []
     unnamed = P.dispatch_platform(
         {"id": "sample-07"},

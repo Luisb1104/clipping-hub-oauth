@@ -1099,6 +1099,23 @@ def dispatch_platform(item, row, *, ledger_path=None, runner=None):
                 "status": "blocked", "reason": obj_err or "youtube_object_lock_unavailable",
                 "called": False, "reposted": False,
             }
+        if not promote:
+            import ledger_dedupe as _dedupe
+            gate = _dedupe.check_upload(
+                item, sha256=str(row.get("artifact_sha256") or ""),
+                channel_id=str(row.get("bound_channel_id") or ""),
+            )
+            if gate.get("action") != "proceed":
+                _unlock_objects(obj_lock)
+                obj_lock = None
+                failed = gate.get("action") == "fail"
+                return {
+                    "key": row.get("key"), "platform": row.get("platform"),
+                    "status": "blocked" if failed else "skipped",
+                    "reason": gate.get("reason") or ("ledger_unreadable" if failed else ""),
+                    "remote_id": None if failed else gate.get("video_id"),
+                    "called": False, "reposted": False,
+                }
         hit = _existing_youtube(item, {"sha256": row.get("artifact_sha256") or ""}, row.get("bound_channel_id"))
         named = str(row.get("existing_video_id") or "")
         sha = str(row.get("artifact_sha256") or "")
